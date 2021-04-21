@@ -1,33 +1,21 @@
 # Enumerable Module
 
 module Enumerable
+  def my_each_with_index
+    return 'no block given' unless block_given?
 
-  def Enumerable.my_each_with_index(enum)
+    enum = to_a
 
-    return "no block given" unless block_given?    
-
-    if enum.is_a? Range 
-      flag_enum = true
-      enum_range = enum
-      enum = enum.to_a
+    enum.length.times do |i|
+      yield(enum[i], i)
     end
 
-    case enum
-    when Hash
-      for i in enum.keys do
-        yield(i, enum[i])
-      end
-    when Array, String
-      i = 0
-      while i < enum.length do
-        yield(i, enum[i])
-        i += 1
-      end
-      return enum unless flag_enum
-      enum_range
-    else
-      "Not an enumerable argument!"
-    end
+    self
   end
 
+  def my_each
+    return 'no block given' unless block_given?
+
+    my_each_with_index { |v, _| yield(v) }
+  end
 end
