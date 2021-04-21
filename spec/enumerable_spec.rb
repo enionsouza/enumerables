@@ -33,8 +33,8 @@ RSpec.describe 'Enumerable methods tests' do
 
       empty_result = []
       my_empty_result = []
-      [].each_with_index { |v, i| empty_result.push([v, i]) }
-      [].my_each_with_index { |v, i| my_empty_result.push([v, i]) }
+      {}.each_with_index { |v, i| empty_result.push([v, i]) }
+      {}.my_each_with_index { |v, i| my_empty_result.push([v, i]) }
       expect(my_empty_result).to eq(my_empty_result)
     end
 
@@ -71,8 +71,8 @@ RSpec.describe 'Enumerable methods tests' do
 
       empty_result = []
       my_empty_result = []
-      [].each { |i| empty_result.push([i]) }
-      [].my_each { |i| my_empty_result.push([i]) }
+      {}.each { |i| empty_result.push([i]) }
+      {}.my_each { |i| my_empty_result.push([i]) }
       expect(my_empty_result).to eq(my_empty_result)
     end
 
