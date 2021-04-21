@@ -1,8 +1,18 @@
 # Enumerable Methods Implementation
 
-> Description
-y
-The Bubble Sort algorithm is implemented as a method in a straightforward manner. A variation that accepts a comparison method as a block is also implemented.
+This project aims to replicate the functionality of the following `Enumerable` module methods:
+
+- `#each` => `#my_each`
+- `#each_with_index` => `#my_each_with_index`
+- `#select` => `#my_select`
+- `#all?` => `#my_all?`
+- `#any?` => `#my_any?`
+- `#none?` => `#my_none?`
+- `#count` => `#my_count`
+- `#map` => `#my_map`
+- `#inject` => `#my_inject`
+
+> This project was originally proposed by The Odin Project [GitHub Page](https://github.com/TheOdinProject/curriculum/blob/master/archive/old_lessons/ruby/basic_ruby/project_advanced_building_blocks.md#project-2-enumerable-methods)
 
 ## Built With
 
@@ -10,23 +20,28 @@ The Bubble Sort algorithm is implemented as a method in a straightforward manner
 - Gems:
   - Bundler
   - RuboCop
+  - RSpec
 
 ## Getting Started
 
-To get a local copy up and running follow these simple steps.
+To get a local copy up and running follow these simple steps:
 
-On GitHub bash
-- `git clone https://github.com/notlfish/ruby-bubble-sort.git`
-- `cd ruby-bubble-sort` to enter the project folder in GitBash.
-- Open `bubble_sort.rb` in an editor to see the code.
+On GitHub bash:
+
+- To clone the project to your machine, run `git clone https://github.com/enionsouza/enumerables.git`
+- To enter the project folder, run `cd enumerables`.
+- To see the source code, open `src/enumerable.rb` in an editor.
+- To see the provided tests, open `spec/enumerable_spec.rb` in an editor.
 
 ### Prerequisites
 
-> Ruby must be installed on your computer (version 3.0.1)
+Ruby and Bundler must be installed on your computer (versions 3.0.1 and 2.2.15, respectively)
 
 ### Run tests
 
-RuboCop is set up to run locally. Just run `rubocop` in the root of the repo.
+- RuboCop is set up to run locally. Just run `rubocop` in the root of the repo.
+- Additionally, run `bundle install` to install the project's dependencies.
+- Finally, run `bundle exec rspec spec/enumerable_spec.rb` to perform the provided tests.
 
 ## Authors
 
@@ -54,8 +69,8 @@ Give a ⭐️ if you like this project!
 
 ## Acknowledgments
 
-This code is a project for [Microverse](https://www.microverse.org/), and its specification is taken from [The Odin Project](https://www.theodinproject.com/home)
+This code is a project for [Microverse](https://www.microverse.org/), and its specification was taken from [The Odin Project](https://www.theodinproject.com/home)
 
 ## 📝 License
 
-This project is [MIT](lic.url) licensed.
+This project is [MIT](./LICENSE) licensed.
