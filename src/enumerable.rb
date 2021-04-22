@@ -52,4 +52,10 @@ module Enumerable
 
     init
   end
+
+  def my_all?
+    return my_all? { |v| v } unless block_given?
+
+    inject(true) { |acc, v| yield(v) ? acc : false }
+  end
 end
