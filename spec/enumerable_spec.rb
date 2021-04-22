@@ -14,6 +14,7 @@ boolean_array = [true, true, false, true]
 true_array = Array.new(3, true)
 false_array = Array.new(3, false)
 boolean_hash = { a: true, b: true, c: false }
+example_proc = proc { |x| x + 2 }
 
 RSpec.describe 'Enumerable methods tests' do
   describe 'my_each_with_index' do
@@ -165,6 +166,10 @@ RSpec.describe 'Enumerable methods tests' do
         acc * v
       end
       expect(my_empty_result).to eq(empty_result)
+    end
+
+    it 'Meets example for multiply_els' do
+      expect([2, 4, 5].multiply_els).to eq(40)
     end
 
     it ' Replicates inject on Hash with blocks and initial value' do
@@ -621,6 +626,98 @@ RSpec.describe 'Enumerable methods tests' do
       empty_result = [].none?(Numeric)
       my_empty_result = [].my_none?(Numeric)
       expect(my_empty_result).to eq(empty_result)
+    end
+  end
+
+  describe 'my_count' do
+    it 'Replicates count on Array without parameter nor block' do
+      standard_result = example_array.count
+      my_result = example_array.my_count
+      expect(my_result).to eq(standard_result)
+
+      empty_result = [].count
+      my_empty_result = [].my_count
+      expect(my_empty_result).to eq(empty_result)
+    end
+
+    it 'Replicates count on Hash without parameter nor block' do
+      standard_result = example_hash.count
+      my_result = example_hash.my_count
+      expect(my_result).to eq(standard_result)
+
+      empty_result = {}.count
+      my_empty_result = {}.my_count
+      expect(my_empty_result).to eq(empty_result)
+    end
+
+    it 'Replicates count on Range without parameter nor block' do
+      standard_result = example_range.count
+      my_result = example_range.my_count
+      expect(my_result).to eq(standard_result)
+    end
+
+    it 'Replicates count on Array with parameter' do
+      standard_result = example_array.count(2)
+      my_result = example_array.my_count(2)
+      expect(my_result).to eq(standard_result)
+
+      empty_result = [].count(2)
+      my_empty_result = [].my_count(2)
+      expect(my_empty_result).to eq(empty_result)
+    end
+
+    it 'Replicates count on Array with block' do
+      standard_result = example_array.count { |v| v > 2 }
+      my_result = example_array.my_count { |v| v > 2 }
+      expect(my_result).to eq(standard_result)
+
+      empty_result = [].count { |v| v > 2 }
+      my_empty_result = [].my_count { |v| v > 2 }
+      expect(my_empty_result).to eq(empty_result)
+    end
+  end
+
+  describe 'my_map' do
+    it 'Replicates map on Array' do
+      standard_result = example_array.map { |i| i * 42 }
+      my_result = example_array.my_map { |i| i * 42 }
+      expect(my_result).to eq(standard_result)
+
+      standard_result = example_array_of_strings.map { |i| "#{i.upcase}!" }
+      my_result = example_array_of_strings.my_map { |i| "#{i.upcase}!" }
+      expect(my_result).to eq(standard_result)
+
+      empty_result = [].map { |i| i * 42 }
+      my_empty_result = [].my_map { |i| i * 42 }
+      expect(my_empty_result).to eq(empty_result)
+    end
+
+    it 'Replicates map on Hash' do
+      standard_result = example_hash.map { |i| i }
+      my_result = example_hash.my_map { |i| i }
+      expect(my_result).to eq(standard_result)
+
+      empty_result = {}.map { |i| i }
+      my_empty_result = {}.my_map { |i| i }
+      expect(my_empty_result).to eq(empty_result)
+    end
+
+    it 'Replicates map on Range' do
+      standard_result = example_range.map { |i| i + 5 }
+      my_result = example_range.my_map { |i| i + 5 }
+      expect(my_result).to eq(standard_result)
+    end
+
+    it 'Meets specification with procs' do
+      block_result = example_range.map { |x| x + 2 }
+      proc_result = example_range.my_map(example_proc)
+      expect(block_result).to eq(proc_result)
+    end
+
+    it 'Meets specification with procs and blocks' do
+      block_result = example_range.map { |x| x + 2 }
+      proc_result = example_range.my_map(example_proc) { |x| x + 1 }
+      expect(block_result).to eq(proc_result)
     end
   end
 end

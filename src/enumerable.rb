@@ -53,6 +53,10 @@ module Enumerable
     init
   end
 
+  def multiply_els
+    my_inject(1) { |acc, v| acc * v }
+  end
+
   def my_all?(pattern = nil)
     return my_all?(pattern) { |v| v } unless block_given?
 
@@ -83,5 +87,21 @@ module Enumerable
 
   def my_none?(pattern = nil, &block)
     !my_any?(pattern, &block)
+  end
+
+  def my_count(param = :dont_match_me)
+    return my_inject(0) { |acc, v| yield(v) ? acc + 1 : acc } if block_given?
+
+    return my_count { |_| true } if param == :dont_match_me
+
+    my_count { |v| v == param }
+  end
+
+  def my_map(proc = nil)
+    return my_map { |v| proc.call(v) } unless proc.nil?
+
+    result = []
+    my_each { |v| result.push(yield(v)) }
+    result
   end
 end
