@@ -53,9 +53,35 @@ module Enumerable
     init
   end
 
-  def my_all?
-    return my_all? { |v| v } unless block_given?
+  def my_all?(pattern = nil)
+    return my_all?(pattern) { |v| v } unless block_given?
 
-    inject(true) { |acc, v| yield(v) ? acc : false }
+    case pattern
+    when Regexp
+      return my_all? { |v| v.match(pattern) }
+    when Class
+      return my_all? { |v| v.is_a? pattern }
+    end
+
+    my_each { |v| return false unless yield(v) }
+    true
+  end
+
+  def my_any?(pattern = nil)
+    return my_any?(pattern) { |v| v } unless block_given?
+
+    case pattern
+    when Regexp
+      return my_any? { |v| v.match(pattern) }
+    when Class
+      return my_any? { |v| v.is_a? pattern }
+    end
+
+    my_each { |v| return true if yield(v) }
+    false
+  end
+
+  def my_none?(pattern = nil, &block)
+    !my_any?(pattern, &block)
   end
 end

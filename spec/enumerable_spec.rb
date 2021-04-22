@@ -2,6 +2,7 @@ require 'spec_helper'
 require_relative '../src/enumerable'
 
 example_array = [1, 2, 3, 4, 5]
+example_array_of_strings = %w[aa ab ac]
 example_range = (1..10)
 example_hash = {
   fruit: 'tucuman',
@@ -370,6 +371,256 @@ RSpec.describe 'Enumerable methods tests' do
       standard_result = example_range.all? { |_| false }
       my_result = example_range.my_all? { |_| false }
       expect(my_result).to eq(standard_result)
+    end
+
+    it 'my_all? replicates all? on Array with pattern or class' do
+      standard_result = example_array_of_strings.all?(/a/)
+      my_result = example_array_of_strings.my_all?(/a/)
+      expect(my_result).to eq(standard_result)
+
+      standard_result = example_array_of_strings.all?(/s/)
+      my_result = example_array_of_strings.my_all?(/s/)
+      expect(my_result).to eq(standard_result)
+
+      standard_result = example_array.all?(Numeric)
+      my_result = example_array.my_all?(Numeric)
+      expect(my_result).to eq(standard_result)
+
+      standard_result = example_array.all?(String)
+      my_result = example_array.my_all?(String)
+      expect(my_result).to eq(standard_result)
+
+      empty_result = [].all?(/s/)
+      my_empty_result = [].my_all?(/s/)
+      expect(my_empty_result).to eq(empty_result)
+
+      empty_result = [].all?(Numeric)
+      my_empty_result = [].my_all?(Numeric)
+      expect(my_empty_result).to eq(empty_result)
+    end
+  end
+
+  describe 'my_any?' do
+    it 'my_any? replicates any? on Array without block' do
+      standard_result = boolean_array.any?
+      my_result = boolean_array.my_any?
+      expect(my_result).to eq(standard_result)
+
+      standard_result = true_array.any?
+      my_result = true_array.my_any?
+      expect(my_result).to eq(standard_result)
+
+      standard_result = false_array.any?
+      my_result = false_array.my_any?
+      expect(my_result).to eq(standard_result)
+
+      empty_result = [].any?
+      my_empty_result = [].my_any?
+      expect(my_empty_result).to eq(empty_result)
+    end
+
+    it 'my_any? replicates any? on Hash without block' do
+      standard_result = boolean_hash.any?
+      my_result = boolean_hash.my_any?
+      expect(my_result).to eq(standard_result)
+
+      empty_result = {}.any?
+      my_empty_result = {}.my_any?
+      expect(my_empty_result).to eq(empty_result)
+    end
+
+    it 'my_any? replicates any? on Range without block' do
+      standard_result = example_range.any?
+      my_result = example_range.my_any?
+      expect(my_result).to eq(standard_result)
+    end
+
+    it 'my_any? replicates any? on Array with block' do
+      standard_result = example_array.any? { |v| v > 2 }
+      my_result = example_array.my_any? { |v| v > 2 }
+      expect(my_result).to eq(standard_result)
+
+      standard_result = example_array.any? { |_| true }
+      my_result = example_array.my_any? { |_| true }
+      expect(my_result).to eq(standard_result)
+
+      standard_result = example_array.any? { |_| false }
+      my_result = example_array.my_any? { |_| false }
+      expect(my_result).to eq(standard_result)
+
+      empty_result = [].any? { |_| false }
+      my_empty_result = [].my_any? { |_| false }
+      expect(my_empty_result).to eq(empty_result)
+    end
+
+    it 'my_any? replicates any? on Hash with block' do
+      standard_result = example_hash.any? { |v| v[1].is_a? String }
+      my_result = example_hash.my_any? { |v| v[1].is_a? String }
+      expect(my_result).to eq(standard_result)
+
+      standard_result = example_hash.any? { |_| true }
+      my_result = example_hash.my_any? { |_| true }
+      expect(my_result).to eq(standard_result)
+
+      standard_result = example_array.any? { |_| false }
+      my_result = example_array.my_any? { |_| false }
+      expect(my_result).to eq(standard_result)
+
+      empty_result = {}.any? { |_| false }
+      my_empty_result = {}.my_any? { |_| false }
+      expect(my_empty_result).to eq(empty_result)
+    end
+
+    it 'my_any? replicates any? on Range with block' do
+      standard_result = example_range.any? { |v| v > 2 }
+      my_result = example_range.my_any? { |v| v > 2 }
+      expect(my_result).to eq(standard_result)
+
+      standard_result = example_range.any? { |_| true }
+      my_result = example_range.my_any? { |_| true }
+      expect(my_result).to eq(standard_result)
+
+      standard_result = example_range.any? { |_| false }
+      my_result = example_range.my_any? { |_| false }
+      expect(my_result).to eq(standard_result)
+    end
+
+    it 'my_any? replicates any? on Array with pattern or class' do
+      standard_result = example_array_of_strings.any?(/a/)
+      my_result = example_array_of_strings.my_any?(/a/)
+      expect(my_result).to eq(standard_result)
+
+      standard_result = example_array_of_strings.any?(/s/)
+      my_result = example_array_of_strings.my_any?(/s/)
+      expect(my_result).to eq(standard_result)
+
+      standard_result = example_array.any?(Numeric)
+      my_result = example_array.my_any?(Numeric)
+      expect(my_result).to eq(standard_result)
+
+      standard_result = example_array.any?(String)
+      my_result = example_array.my_any?(String)
+      expect(my_result).to eq(standard_result)
+
+      empty_result = [].any?(/s/)
+      my_empty_result = [].my_any?(/s/)
+      expect(my_empty_result).to eq(empty_result)
+
+      empty_result = [].any?(Numeric)
+      my_empty_result = [].my_any?(Numeric)
+      expect(my_empty_result).to eq(empty_result)
+    end
+  end
+
+  describe 'my_none?' do
+    it 'my_none? replicates none? on Array without block' do
+      standard_result = boolean_array.none?
+      my_result = boolean_array.my_none?
+      expect(my_result).to eq(standard_result)
+
+      standard_result = true_array.none?
+      my_result = true_array.my_none?
+      expect(my_result).to eq(standard_result)
+
+      standard_result = false_array.none?
+      my_result = false_array.my_none?
+      expect(my_result).to eq(standard_result)
+
+      empty_result = [].none?
+      my_empty_result = [].my_none?
+      expect(my_empty_result).to eq(empty_result)
+    end
+
+    it 'my_none? replicates none? on Hash without block' do
+      standard_result = boolean_hash.none?
+      my_result = boolean_hash.my_none?
+      expect(my_result).to eq(standard_result)
+
+      empty_result = {}.none?
+      my_empty_result = {}.my_none?
+      expect(my_empty_result).to eq(empty_result)
+    end
+
+    it 'my_none? replicates none? on Range without block' do
+      standard_result = example_range.none?
+      my_result = example_range.my_none?
+      expect(my_result).to eq(standard_result)
+    end
+
+    it 'my_none? replicates none? on Array with block' do
+      standard_result = example_array.none? { |v| v > 2 }
+      my_result = example_array.my_none? { |v| v > 2 }
+      expect(my_result).to eq(standard_result)
+
+      standard_result = example_array.none? { |_| true }
+      my_result = example_array.my_none? { |_| true }
+      expect(my_result).to eq(standard_result)
+
+      standard_result = example_array.none? { |_| false }
+      my_result = example_array.my_none? { |_| false }
+      expect(my_result).to eq(standard_result)
+
+      empty_result = [].none? { |_| false }
+      my_empty_result = [].my_none? { |_| false }
+      expect(my_empty_result).to eq(empty_result)
+    end
+
+    it 'my_none? replicates none? on Hash with block' do
+      standard_result = example_hash.none? { |v| v[1].is_a? String }
+      my_result = example_hash.my_none? { |v| v[1].is_a? String }
+      expect(my_result).to eq(standard_result)
+
+      standard_result = example_hash.none? { |_| true }
+      my_result = example_hash.my_none? { |_| true }
+      expect(my_result).to eq(standard_result)
+
+      standard_result = example_array.none? { |_| false }
+      my_result = example_array.my_none? { |_| false }
+      expect(my_result).to eq(standard_result)
+
+      empty_result = {}.none? { |_| false }
+      my_empty_result = {}.my_none? { |_| false }
+      expect(my_empty_result).to eq(empty_result)
+    end
+
+    it 'my_none? replicates none? on Range with block' do
+      standard_result = example_range.none? { |v| v > 2 }
+      my_result = example_range.my_none? { |v| v > 2 }
+      expect(my_result).to eq(standard_result)
+
+      standard_result = example_range.none? { |_| true }
+      my_result = example_range.my_none? { |_| true }
+      expect(my_result).to eq(standard_result)
+
+      standard_result = example_range.none? { |_| false }
+      my_result = example_range.my_none? { |_| false }
+      expect(my_result).to eq(standard_result)
+    end
+
+    it 'my_none? replicates none? on Array with pattern or class' do
+      standard_result = example_array_of_strings.none?(/a/)
+      my_result = example_array_of_strings.my_none?(/a/)
+      expect(my_result).to eq(standard_result)
+
+      standard_result = example_array_of_strings.none?(/s/)
+      my_result = example_array_of_strings.my_none?(/s/)
+      expect(my_result).to eq(standard_result)
+
+      standard_result = example_array.none?(Numeric)
+      my_result = example_array.my_none?(Numeric)
+      expect(my_result).to eq(standard_result)
+
+      standard_result = example_array.none?(String)
+      my_result = example_array.my_none?(String)
+      expect(my_result).to eq(standard_result)
+
+      empty_result = [].none?(/s/)
+      my_empty_result = [].my_none?(/s/)
+      expect(my_empty_result).to eq(empty_result)
+
+      empty_result = [].none?(Numeric)
+      my_empty_result = [].my_none?(Numeric)
+      expect(my_empty_result).to eq(empty_result)
     end
   end
 end
