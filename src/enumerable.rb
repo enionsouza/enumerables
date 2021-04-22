@@ -34,18 +34,22 @@ module Enumerable
     result
   end
 
-  def my_inject(init = nil, &block)
-    enum = self
-    enum = to_a if is_a? Hash
+  def my_inject(init = nil, sym = nil, &block)
+    enum = to_a
 
-    if init.nil?
-      zero = take(1)[0]
-      init = drop(1).my_inject(zero, &block)
+    return init if enum.empty? && block_given?
+
+    if block_given?
+      if init.nil?
+        init = enum.drop(1).my_inject(enum[0], &block)
+      else
+        enum.my_each { |v| init = block.call(init, v) }
+      end
     else
-      enum.my_each { |v| init = block.call(init, v) }
+      sym, init = init, sym if sym.nil?
+      return enum.my_inject(init) { |a, b| a.send(sym, b) }
     end
+
     init
   end
-
-
 end

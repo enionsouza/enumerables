@@ -190,7 +190,7 @@ RSpec.describe 'Enumerable methods tests' do
       expect(my_result).to eq(standard_result)
     end
 
-    xit ' Replicates inject on Array with blocks' do
+    it ' Replicates inject on Array with blocks' do
       standard_result = example_array.inject do |acc, v|
         acc + v
       end
@@ -208,7 +208,7 @@ RSpec.describe 'Enumerable methods tests' do
       expect(my_empty_result).to eq(empty_result)
     end
 
-    xit ' Replicates inject on Hash with blocks' do
+    it ' Replicates inject on Hash with blocks' do
       standard_result = example_hash.inject do |acc, v|
         acc + v
       end
@@ -226,13 +226,59 @@ RSpec.describe 'Enumerable methods tests' do
       expect(my_empty_result).to eq(empty_result)
     end
 
-    xit 'Replicates inject on Range with blocks' do
+    it 'Replicates inject on Range with blocks' do
       standard_result = example_range.inject do |acc, v|
         acc * v
       end
       my_result = example_range.my_inject do |acc, v|
         acc * v
       end
+      expect(my_result).to eq(standard_result)
+    end
+
+    it ' Replicates inject on Array with symbol' do
+      standard_result = example_array.inject(:+)
+      my_result = example_array.my_inject(:+)
+      expect(my_result).to eq(standard_result)
+
+      standard_result = example_array.inject(1, :*)
+      my_result = example_array.my_inject(1, :*)
+      expect(my_result).to eq(standard_result)
+
+      empty_result = [].inject(:+)
+      my_empty_result = [].my_inject(:+)
+      expect(my_empty_result).to eq(empty_result)
+
+      empty_result = [].inject(1, :+)
+      my_empty_result = [].my_inject(1, :+)
+      expect(my_empty_result).to eq(empty_result)
+    end
+
+    it ' Replicates inject on Hash with symbol' do
+      standard_result = example_hash.inject(:+)
+      my_result = example_hash.my_inject(:+)
+      expect(my_result).to eq(standard_result)
+
+      standard_result = example_hash.inject([1, 0], :+)
+      my_result = example_hash.my_inject([1, 0], :+)
+      expect(my_result).to eq(standard_result)
+
+      empty_result = {}.inject(:+)
+      my_empty_result = {}.my_inject(:+)
+      expect(my_empty_result).to eq(empty_result)
+
+      empty_result = {}.inject([1, 0], :+)
+      my_empty_result = {}.my_inject([1, 0], :+)
+      expect(my_empty_result).to eq(empty_result)
+    end
+
+    it 'Replicates inject on Range with symbol' do
+      standard_result = example_range.inject(:-)
+      my_result = example_range.my_inject(:-)
+      expect(my_result).to eq(standard_result)
+
+      standard_result = example_range.inject(15, :-)
+      my_result = example_range.my_inject(15, :-)
       expect(my_result).to eq(standard_result)
     end
   end
