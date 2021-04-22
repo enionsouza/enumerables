@@ -33,4 +33,19 @@ module Enumerable
 
     result
   end
+
+  def my_inject(init = nil, &block)
+    enum = self
+    enum = to_a if is_a? Hash
+
+    if init.nil?
+      zero = take(1)[0]
+      init = drop(1).my_inject(zero, &block)
+    else
+      enum.my_each { |v| init = block.call(init, v) }
+    end
+    init
+  end
+
+
 end
