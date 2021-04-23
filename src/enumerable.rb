@@ -37,8 +37,7 @@ module Enumerable
     result
   end
 
-  def my_inject(init = nil, sym = nil, &block)
-    raise LocalJumpError if init == nil && sym == nil and !block_given?
+  def my_inject_helper(init = nil, sym = nil, &block)
     enum = to_a
 
     return init if enum.empty? && block_given?
@@ -57,22 +56,26 @@ module Enumerable
     init
   end
 
+  def my_inject(init = nil, sym = nil, &block)
+    my_inject_helper(init, sym, &block)
+  rescue TypeError
+    raise LocalJumpError
+  end
+
   def my_all?(pattern = NO_ARGUMENT)
     return my_all?(pattern) { |v| v } unless block_given?
 
     case pattern
     when Regexp
-      return my_all? { |v| v.match(pattern) }
+      my_all? { |v| v.match(pattern) }
     when Class
-      return my_all? { |v| v.is_a? pattern }
+      my_all? { |v| v.is_a? pattern }
     when NO_ARGUMENT
       my_each { |v| return false unless yield(v) }
       true
     else
-      return my_all? { |v| v == pattern }
+      my_all? { |v| v == pattern }
     end
-
-
   end
 
   def my_any?(pattern = NO_ARGUMENT)
@@ -89,7 +92,6 @@ module Enumerable
     else
       my_any? { |v| v == pattern }
     end
-
   end
 
   def my_none?(pattern = NO_ARGUMENT, &block)
