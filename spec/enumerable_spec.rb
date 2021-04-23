@@ -32,6 +32,13 @@ RSpec.describe 'Enumerable methods tests' do
       expect(my_empty_result).to eq(empty_result)
     end
 
+    it 'Replicates each_with_index on Array without block' do
+      len = example_array.count
+      standard_enum = example_array.each_with_index.take(len)
+      my_enum = example_array.my_each_with_index.take(len)
+      expect(my_enum).to eq(standard_enum)
+    end
+
     it 'Replicates each_with_index on Hash' do
       standard_result = []
       example_hash.each_with_index { |v, i| standard_result.push([v, i]) }
@@ -46,12 +53,26 @@ RSpec.describe 'Enumerable methods tests' do
       expect(my_empty_result).to eq(empty_result)
     end
 
+    it 'Replicates each_with_index on Hash without block' do
+      len = example_hash.count
+      standard_enum = example_hash.each_with_index.take(len)
+      my_enum = example_hash.my_each_with_index.take(len)
+      expect(my_enum).to eq(standard_enum)
+    end
+
     it 'Replicates each_with_index on Range' do
       standard_result = []
       example_range.each_with_index { |v, i| standard_result.push([v, i]) }
       my_result = []
       example_range.my_each_with_index { |v, i| my_result.push([v, i]) }
       expect(my_result).to eq(standard_result)
+    end
+
+    it 'Replicates each_with_index on Range without block' do
+      len = example_range.count
+      standard_enum = example_range.each_with_index.take(len)
+      my_enum = example_range.my_each_with_index.take(len)
+      expect(my_enum).to eq(standard_enum)
     end
   end
 
@@ -70,6 +91,13 @@ RSpec.describe 'Enumerable methods tests' do
       expect(my_empty_result).to eq(empty_result)
     end
 
+    it 'Replicates each on Array without block' do
+      len = example_array.count
+      standard_enum = example_array.each.take(len)
+      my_enum = example_array.my_each.take(len)
+      expect(my_enum).to eq(standard_enum)
+    end
+
     it 'Replicates each on Hash' do
       standard_result = []
       example_hash.each { |i| standard_result.push([i]) }
@@ -84,12 +112,26 @@ RSpec.describe 'Enumerable methods tests' do
       expect(my_empty_result).to eq(empty_result)
     end
 
+    it 'Replicates each on Hash without block' do
+      len = example_hash.count
+      standard_enum = example_hash.each.take(len)
+      my_enum = example_hash.my_each.take(len)
+      expect(my_enum).to eq(standard_enum)
+    end
+
     it 'Replicates each on Range' do
       standard_result = []
       example_range.each { |i| standard_result.push([i]) }
       my_result = []
       example_range.my_each { |i| my_result.push([i]) }
       expect(my_result).to eq(standard_result)
+    end
+
+    it 'Replicates each on Range without block' do
+      len = example_range.count
+      standard_enum = example_range.each.take(len)
+      my_enum = example_range.my_each.take(len)
+      expect(my_enum).to eq(standard_enum)
     end
   end
 
@@ -104,6 +146,13 @@ RSpec.describe 'Enumerable methods tests' do
       expect(my_empty_result).to eq(empty_result)
     end
 
+    it 'Replicates select on Array without block' do
+      len = example_array.count
+      standard_enum = example_array.select.take(len)
+      my_enum = example_array.my_select.take(len)
+      expect(my_enum).to eq(standard_enum)
+    end
+
     it 'Replicates select on Hash' do
       standard_result = example_hash.select { |_, v| v.is_a? String }
       my_result = example_hash.my_select { |_, v| v.is_a? String }
@@ -114,10 +163,24 @@ RSpec.describe 'Enumerable methods tests' do
       expect(my_empty_result).to eq(empty_result)
     end
 
+    it 'Replicates select on Hash without block' do
+      len = example_hash.count
+      standard_enum = example_hash.select.take(len)
+      my_enum = example_hash.my_select.take(len)
+      expect(my_enum).to eq(standard_enum)
+    end
+
     it 'Replicates select on Range' do
       standard_result = example_range.select { |i| i > 5 }
       my_result = example_range.my_select { |i| i > 5 }
       expect(my_result).to eq(standard_result)
+    end
+
+    it 'Replicates select on Range without block' do
+      len = example_range.count
+      standard_enum = example_range.select.take(len)
+      my_enum = example_range.my_select.take(len)
+      expect(my_enum).to eq(standard_enum)
     end
   end
 
@@ -378,7 +441,8 @@ RSpec.describe 'Enumerable methods tests' do
       expect(my_result).to eq(standard_result)
     end
 
-    it 'my_all? replicates all? on Array with pattern or class' do
+    it 'my_all? replicates all? on Array with pattern or class or
+    an argument for comparison' do
       standard_result = example_array_of_strings.all?(/a/)
       my_result = example_array_of_strings.my_all?(/a/)
       expect(my_result).to eq(standard_result)
@@ -393,6 +457,14 @@ RSpec.describe 'Enumerable methods tests' do
 
       standard_result = example_array.all?(String)
       my_result = example_array.my_all?(String)
+      expect(my_result).to eq(standard_result)
+
+      standard_result = true_array.all?(true)
+      my_result = true_array.my_all?(true)
+      expect(my_result).to eq(standard_result)
+
+      standard_result = boolean_array.all?(true)
+      my_result = boolean_array.my_all?(true)
       expect(my_result).to eq(standard_result)
 
       empty_result = [].all?(/s/)
@@ -490,7 +562,8 @@ RSpec.describe 'Enumerable methods tests' do
       expect(my_result).to eq(standard_result)
     end
 
-    it 'my_any? replicates any? on Array with pattern or class' do
+    it 'my_any? replicates any? on Array with pattern or class or
+    an argument for comparison' do
       standard_result = example_array_of_strings.any?(/a/)
       my_result = example_array_of_strings.my_any?(/a/)
       expect(my_result).to eq(standard_result)
@@ -505,6 +578,18 @@ RSpec.describe 'Enumerable methods tests' do
 
       standard_result = example_array.any?(String)
       my_result = example_array.my_any?(String)
+      expect(my_result).to eq(standard_result)
+
+      standard_result = true_array.any?(false)
+      my_result = true_array.my_any?(false)
+      expect(my_result).to eq(standard_result)
+
+      standard_result = false_array.any?(true)
+      my_result = false_array.my_any?(true)
+      expect(my_result).to eq(standard_result)
+
+      standard_result = boolean_array.any?(true)
+      my_result = boolean_array.my_any?(true)
       expect(my_result).to eq(standard_result)
 
       empty_result = [].any?(/s/)
@@ -602,7 +687,8 @@ RSpec.describe 'Enumerable methods tests' do
       expect(my_result).to eq(standard_result)
     end
 
-    it 'my_none? replicates none? on Array with pattern or class' do
+    it 'my_none? replicates none? on Array with pattern or class or
+    an argument for comparison' do
       standard_result = example_array_of_strings.none?(/a/)
       my_result = example_array_of_strings.my_none?(/a/)
       expect(my_result).to eq(standard_result)
@@ -617,6 +703,18 @@ RSpec.describe 'Enumerable methods tests' do
 
       standard_result = example_array.none?(String)
       my_result = example_array.my_none?(String)
+      expect(my_result).to eq(standard_result)
+
+      standard_result = true_array.none?(true)
+      my_result = true_array.my_none?(true)
+      expect(my_result).to eq(standard_result)
+
+      standard_result = false_array.none?(true)
+      my_result = false_array.my_none?(true)
+      expect(my_result).to eq(standard_result)
+
+      standard_result = boolean_array.none?(true)
+      my_result = boolean_array.my_none?(true)
       expect(my_result).to eq(standard_result)
 
       empty_result = [].none?(/s/)
