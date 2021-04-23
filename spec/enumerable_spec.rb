@@ -232,7 +232,11 @@ RSpec.describe 'Enumerable methods tests' do
     end
 
     it 'Meets example for multiply_els' do
-      expect([2, 4, 5].multiply_els).to eq(40)
+      expect(multiply_els([2, 4, 5])).to eq(40)
+    end
+
+    it 'Raises LocalJumpError when no arguments or block given' do
+      expect { example_array.inject }.to raise_error(LocalJumpError)
     end
 
     it ' Replicates inject on Hash with blocks and initial value' do
@@ -788,6 +792,13 @@ RSpec.describe 'Enumerable methods tests' do
       empty_result = [].map { |i| i * 42 }
       my_empty_result = [].my_map { |i| i * 42 }
       expect(my_empty_result).to eq(empty_result)
+    end
+
+    it 'Replicates each_with_index on Array without block' do
+      len = example_array.count
+      standard_enum = example_array.map.take(len)
+      my_enum = example_array.my_map.take(len)
+      expect(my_enum).to eq(standard_enum)
     end
 
     it 'Replicates map on Hash' do

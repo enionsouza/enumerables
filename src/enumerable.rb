@@ -38,6 +38,7 @@ module Enumerable
   end
 
   def my_inject(init = nil, sym = nil, &block)
+    raise LocalJumpError if init == nil && sym == nil and !block_given?
     enum = to_a
 
     return init if enum.empty? && block_given?
@@ -56,10 +57,6 @@ module Enumerable
     init
   end
 
-  def multiply_els
-    my_inject(1) { |acc, v| acc * v }
-  end
-
   def my_all?(pattern = NO_ARGUMENT)
     return my_all?(pattern) { |v| v } unless block_given?
 
@@ -74,7 +71,7 @@ module Enumerable
     else
       return my_all? { |v| v == pattern }
     end
-    
+
 
   end
 
@@ -107,11 +104,19 @@ module Enumerable
     my_count { |v| v == param }
   end
 
-  def my_map(proc = nil)
-    return my_map { |v| proc.call(v) } unless proc.nil?
+  def my_map(proc = NO_ARGUMENT)
+    return my_map { |v| proc.call(v) } unless proc == NO_ARGUMENT
 
-    result = []
-    my_each { |v| result.push(yield(v)) }
-    result
+    if block_given?
+      result = []
+      my_each { |v| result.push(yield(v)) }
+      result
+    else
+      Enumerator.new { |y| my_map { |a| y << a } }
+    end
   end
+end
+
+def multiply_els(array)
+  array.my_inject(1) { |acc, v| acc * v }
 end
