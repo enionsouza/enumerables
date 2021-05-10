@@ -1,23 +1,29 @@
 require 'spec_helper'
 require_relative '../src/enumerable'
 
-def traversal_empty(method, model, &block)
+def traversal_empty(method, model, arg = nil, &block)
+  my_args = [method]
+  std_args = [model]
+  if arg
+    my_args.push(arg)
+    std_args.push(arg)
+  end
   context 'when working on empty Enumerables' do
     it 'on Array' do
-      my_result = [].send(method, &block)
-      std_result = [].send(model, &block)
+      my_result = [].send(*my_args, &block)
+      std_result = [].send(*std_args, &block)
       expect(my_result).to eq(std_result)
     end
 
     it 'on Hash' do
-      my_result = {}.send(method, &block)
-      std_result = {}.send(model, &block)
+      my_result = {}.send(*my_args, &block)
+      std_result = {}.send(*std_args, &block)
       expect(my_result).to eq(std_result)
     end
   end
 end
 
-def traversal_tests(method, model, examples, blocks)
+def traversal_tests(method, model, examples, blocks, arg = nil)
   context 'when working on nonempty Enumerables' do
     let(:examples) { examples }
     let(:blocks) { blocks }
@@ -29,7 +35,7 @@ def traversal_tests(method, model, examples, blocks)
       end
     end
   end
-  traversal_empty(method, model, &blocks[:array])
+  traversal_empty(method, model, arg, &blocks[:array])
 end
 
 examples = { array: [1, 2, 3, 4, 5],
@@ -75,6 +81,13 @@ RSpec.describe 'Enumerable methods tests' do
         expect(my_result).to eq(std_result)
       end
     end
+
+    it 'check Enumerator when no block given' do
+      len = array.length
+      my_enum_arr = array.my_each_with_index.take(len)
+      std_enum_arr = array.each_with_index.take(len)
+      expect(my_enum_arr).to eq(std_enum_arr)
+    end
   end
 
   describe '#my_each replicates #each' do
@@ -107,17 +120,49 @@ RSpec.describe 'Enumerable methods tests' do
         expect(my_result).to eq(std_result)
       end
     end
+
+    it 'check Enumerator when no block given' do
+      len = array.length
+      my_enum_arr = array.my_each.take(len)
+      std_enum_arr = array.each.take(len)
+      expect(my_enum_arr).to eq(std_enum_arr)
+    end
   end
 
   describe '#my_select replicates #select' do
     traversal_tests(:my_select, :select, examples, blocks)
+
+    it 'check Enumerator when no block given' do
+      len = array.length
+      my_enum_arr = array.my_select.take(len)
+      std_enum_arr = array.select.take(len)
+      expect(my_enum_arr).to eq(std_enum_arr)
+    end
   end
 
   describe '#my_inject replicates #inject' do
     inject_blocks = { array: proc { |acc, val| acc + val },
                       hash: proc { |acc, val| acc.push(val[1]) },
                       range: proc { |acc, n| acc * n } }
-    traversal_tests(:my_inject, :inject, examples, inject_blocks)
+    traversal_tests(:my_inject, :inject, examples, inject_blocks, 0)
+
+    it 'with an initial value' do
+      my_result = array.my_inject(5) { |acc, v| acc + v }
+      std_result = array.inject(5) { |acc, v| acc + v }
+      expect(my_result).to eq(std_result)
+    end
+
+    it 'with symbol' do
+      my_result = array.my_inject(5, :+)
+      std_result = array.inject(5, :+)
+      expect(my_result).to eq(std_result)
+    end
+
+    it 'with symbol and block' do
+      my_result = array.my_inject(5, :*) { |acc, v| acc + v }
+      std_result = array.inject(5, :*) { |acc, v| acc + v }
+      expect(my_result).to eq(std_result)
+    end
   end
 
   describe '#my_all? replicates #all?' do
@@ -138,5 +183,7 @@ RSpec.describe 'Enumerable methods tests' do
 
   describe '#my_map replicates #map' do
     traversal_tests(:my_map, :map, examples, blocks)
+
+    # Enumerator
   end
 end

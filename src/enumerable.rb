@@ -37,29 +37,20 @@ module Enumerable
     result
   end
 
-  def my_inject_helper(init = nil, sym = nil, &block)
-    enum = to_a
-
-    return init if enum.empty? && block_given?
-
-    if block_given?
-      if init.nil?
-        init = enum.drop(1).my_inject(enum[0], &block)
-      else
-        enum.my_each { |v| init = block.call(init, v) }
-      end
-    else
-      sym, init = init, sym if sym.nil?
-      return enum.my_inject(init) { |a, b| a.send(sym, b) }
-    end
-
-    init
-  end
-
   def my_inject(init = nil, sym = nil, &block)
-    my_inject_helper(init, sym, &block)
-  rescue TypeError
-    raise LocalJumpError
+    enum = to_a
+    if init.nil?
+      raise LocalJumpError if enum.empty?
+
+      enum.drop(1).my_inject(enum[0], &block)
+    elsif init.is_a?(Symbol) && sym.nil?
+      enum.my_inject { |acc, val| acc.send(init, val) }
+    elsif sym.nil?
+      enum.my_each { |v| init = block.call(init, v) }
+      init
+    else
+      enum.my_inject(init) { |acc, val| acc.send(sym, val) }
+    end
   end
 
   def my_all?(pattern = NO_ARGUMENT)
