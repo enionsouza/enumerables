@@ -58,7 +58,7 @@ Ruby and Bundler must be installed on your computer (versions 3.0.1 and 2.2.15, 
 - LinkedIn: [LinkedIn](https://www.linkedin.com/in/lucas-mauricio-ferrari-soto-472a3515a/)
 
 
-**👤 Kenny Ortega**
+**👤 Kenny A. Ortega C.**
 
 - GitHub: [kensayo](https://github.com/kensayo)
 - Twitter: [@kensayo](https://twitter.com/kensayo)
