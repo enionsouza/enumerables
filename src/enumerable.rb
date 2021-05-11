@@ -37,15 +37,15 @@ module Enumerable
     result
   end
 
-  def my_inject(init = nil, sym = nil, &block)
+  def my_inject(init = NO_ARGUMENT, sym = NO_ARGUMENT, &block)
     enum = to_a
-    if init.nil?
+    if init == NO_ARGUMENT
       raise LocalJumpError if enum.empty?
 
       enum.drop(1).my_inject(enum[0], &block)
-    elsif init.is_a?(Symbol) && sym.nil?
+    elsif init.is_a?(Symbol) && sym == NO_ARGUMENT
       enum.my_inject { |acc, val| acc.send(init, val) }
-    elsif sym.nil?
+    elsif sym == NO_ARGUMENT
       enum.my_each { |v| init = block.call(init, v) }
       init
     else
